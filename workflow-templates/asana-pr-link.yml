@@ -1,4 +1,4 @@
-name: Pull Request
+name: Link PR to Asana Ticket
 
 on:
   pull_request:
