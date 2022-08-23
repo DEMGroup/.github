@@ -1,0 +1,5 @@
+{
+  "name": "Link DEMGroup PRs to Asana Issues workflow",
+  "description": "Link DEMGroup PRs to Asana Issues workflow.",
+  "iconName": "aesir-icon"
+}
