@@ -4,11 +4,12 @@
   "iconName": "aesir-icon",
   "categories": [
     "C#",
-    "python",
+    "Python",
     "HTML",
     "HCL",
-    "javascript",
-    "vue",
+    "Javascript",
+    "Typescript",
+    "Vue",
     "Jinja"
   ]
 }
