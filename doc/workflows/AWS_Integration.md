@@ -1,7 +1,3 @@
-# General Workflow Help
-
-
-
 ## Integrating AWS with workflows
 
 1. Create an IAM role in AWS.
