@@ -1,12 +1,18 @@
-## Hi there 👋
+# Welcome to AESIR, algorithmic crypto trading platform
 
-<!--
+With AESIR you can create unique trading signals and automate your trading strategy by deploying your own crypto trading bots effortlessly. You can choose between a multitude of trading indicators, oscillators, and even clone other profitable configurations.
 
-**Here are some ideas to get you started:**
+[Get Started Now](https://aesircrypto.com/)
 
-🙋‍♀️ A short introduction - what is your organization all about?
-🌈 Contribution guidelines - how can the community get involved?
-👩‍💻 Useful resources - where can the community find your docs? Is there anything else the community should know?
-🍿 Fun facts - what does your team eat for breakfast?
-🧙 Remember, you can do mighty things with the power of [Markdown](https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
--->
+### Detect Volatile Coins
+
+AESIR can detect and place trades on the most volatile crypto-assets on the market. For instance you can tell AESIR to buy any coin that gained more than 3% in the last 5 minutes.
+
+
+### Create unique crypto trading signals
+Create your own unique crypto buy signals by mixing and matching technical indicators, oscillators and more.
+![AESIR Strategy builder](https://miro.medium.com/max/1050/1*nmpHr-amzqLw3bUSma3lIg.gif)
+
+### Clone other trading bots
+You can easily duplicate profitable configurations using our global Leaderboard.
+![AESIR Leaderboard](https://miro.medium.com/max/1050/1*35DH8LzED4VeQcuLhoUADQ.gif)
