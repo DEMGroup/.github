@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Check for hook url
         run: |
-          if (${{ secrets.PR_WEBHOOK_URL == ''); then
+          if (${{ secrets.PR_WEBHOOK_URL == '' }}); then
             echo '## 🏴💀 You are missing `secrets.PR_WEBHOOK_URL` from your repository. Please add it [here](https://github.com/${{github.repository}}/settings/secrets/actions). 💀🏴' >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
