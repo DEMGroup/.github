@@ -6,11 +6,7 @@ on:
       semver:
         description: Semver level to bump (Possible Versions - major, minor, patch)
         required: false
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
+        type: string
     outputs:
       new_version:
         description: "The new semver version (sans 'v' prefix) based on the inputs.semver"
@@ -39,7 +35,7 @@ jobs:
           if [[ $labels =~ release\/([a-z]+) ]]; then
             level="${BASH_REMATCH[1]}"
           else
-            level="${{ inputs.semver }}"
+            level="${{ inputs.semver || 'patch' }}"
           fi
           releaseLevel=$(echo "$releaseLevel" | tr '[:upper:]' '[:lower:]')
           echo "releaseLevel=$level" >> $GITHUB_OUTPUT
