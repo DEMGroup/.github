@@ -1,0 +1,83 @@
+name: Bug
+description: File a bug report
+body:
+	- type: markdown
+		attributes:
+			value: |
+				Before opening a bug report, please search for the behaviour in the existing issues. 
+				
+				---
+				
+				Thank you for taking the time to file a bug report. To address this bug as fast as possible, we need some information.
+	- type: input
+		id: os
+		attributes:
+			label: Operating system
+			description: "Which operating system do you use? Please provide the version as well."
+			placeholder: "macOS Big Sur 11.5.2"
+		validations:
+			required: true  
+	- type: input
+		id: ui
+		attributes:
+			label: UI Version
+			description: "Please provide the full UI version. This can be found at the bottom of the left hand menu."
+			placeholder: "v1.1.0"
+		validations:
+			required: true
+	- type: input
+		id: api
+		attributes:
+			label: API Version
+			description: "Please provide the full API (heimdall) version. This can be found by going to `https://heimdall.aesircrypto.com/api/version`"
+			placeholder: "2.1.1.0"
+		validations:
+			required: false
+	- type: dropdown
+		id: ensure-main
+		attributes:
+			label: On main or in Prod?
+			description: If this bug occurred locally did you check production or ensure you are on main to validate?
+			options:
+				- Yes
+				- No
+		validations:
+			required: false
+	- type: input
+		id: bug-title
+		attributes:
+			label: Title
+			description: Clear, concise and descriptive title of the bug?
+		validations:
+			required: true
+	- type: textarea
+		id: bug-description
+		attributes:
+			label: Description
+			description: What happened?
+		validations:
+			required: true
+	- type: dropdown
+		id: severity
+		attributes:
+			label: Severity
+			description: From your perspective how severe is this bug?
+			options:
+				- Critical
+				- Major
+				- Minor
+				- Cosmetic
+				- Cosmetic (Device specific)
+		validations:
+			required: true
+	- type: textarea
+		id: steps
+		attributes:
+			label: Steps to reproduce
+			description: Which steps do we need to take to reproduce this error?
+	- type: textarea
+		id: logs
+		attributes:
+			label: Relevant log output
+			description: If applicable, provide relevant log output. No need for backticks here.
+			render: shell
