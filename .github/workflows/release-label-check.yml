@@ -1,4 +1,4 @@
-name: Label Checker
+name: Release Label Checker
 
 on:
   pull_request:
