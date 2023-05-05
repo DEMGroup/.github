@@ -1,7 +1,8 @@
 name: Send PR message to discord
 
 on:
-  workflow_call:
+  pull_request:
+    types: [opened, unlabeled]
 
 jobs:
   notify-discord-pr:
@@ -9,11 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check for hook url
+        env: 
+          PR_WEBHOOK_URL: ${{ secrets.PR_WEBHOOK_URL }}
+        if: ${{ env.PR_WEBHOOK_URL == '' }}
         run: |
-          if (${{ secrets.PR_WEBHOOK_URL == '' }}); then
-            echo '## 🏴💀 You are missing `secrets.PR_WEBHOOK_URL` from your repository. Please add it [here](https://github.com/${{github.repository}}/settings/secrets/actions). 💀🏴' >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
+          echo '## 🏴💀 You are missing `secrets.PR_WEBHOOK_URL` from your repository. Please add it [here](https://github.com/${{github.repository.org}}/settings/secrets/actions). 💀🏴' >> $GITHUB_STEP_SUMMARY
+          exit 1
 
       - uses: actions/checkout@v3
       - name: Set vars
