@@ -1,0 +1,23 @@
+name: Check Deploy File
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-deploy-file:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        
+      - name: Check if deploy.yml exists
+        id: check-file
+        run: |
+          if [ -f ".github/workflows/deploy.yml" ]; then
+            exit 0
+          else
+            exit 1
+          fi
