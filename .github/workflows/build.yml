@@ -108,7 +108,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci --ignore-scripts
+        run: npm ci
       - name: Build the app
         run: npm run build
       - name: Run the tests
