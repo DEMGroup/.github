@@ -3,7 +3,7 @@ name: Check Deploy File
 on:
   pull_request:
     branches:
-      - main
+      - $default-branch
 
 jobs:
   check-deploy-file:

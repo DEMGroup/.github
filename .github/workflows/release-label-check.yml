@@ -8,6 +8,11 @@ on:
       - reopened
       - labeled
       - unlabeled
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.yml'
+      - '**/*.json'
+    branches: $default-branch
 
 jobs:
   check_labels:
@@ -16,5 +21,5 @@ jobs:
     steps:
       - uses: docker://agilepathway/pull-request-label-checker:latest
         with:
-          one_of: release/major,release/minor,release/patch
+          one_of: release/major,release/minor,release/patch,release/skip
           repo_token: ${{ secrets.GITHUB_TOKEN }}
