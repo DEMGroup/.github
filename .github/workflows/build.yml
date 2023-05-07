@@ -53,8 +53,8 @@ jobs:
         with:
           path: ~/.nuget/packages
           # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ github.repository }}-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj')}}
-          restore-keys: ${{ github.repository }}-${{ runner.os }}-nuget-
+          key: ${{ github.event.repository.name }}-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj')}}
+          restore-keys: ${{ github.event.repository.name }}-${{ runner.os }}-nuget-
       - name: Add Github Package Source
         run: dotnet nuget add source --username DEMGroup --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github.com "https://nuget.pkg.github.com/DEMGroup/index.json"
       - name: Install dependencies
@@ -78,7 +78,7 @@ jobs:
         if: ${{ steps.hasTests.outputs.hasTests == 'true' }}
         uses: phoenix-actions/test-reporting@v12
         with:
-          name: ${{ github.repository }} Test Results
+          name: ${{ github.event.repository.full_name }} Test Results
           path: TestResults/*.trx
           reporter: dotnet-trx
           output-to: step-summary
@@ -90,7 +90,7 @@ jobs:
             ${{ steps.test-report.outputs.runHtmlUrl }}
       - uses: actions/upload-artifact@v3
         with:
-          name: test-results-${{ github.repository }}-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj')}}
+          name: test-results-${{ github.event.repository.name.name }}-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj')}}
           path: TestResults/*
 
   build-node:
@@ -104,7 +104,7 @@ jobs:
         id: cache
         with:
           path: ~/node_modules
-          key: ${{ github.repository }}-${{ runner.os }}-packages-${{ hashFiles('package-lock.json')}}
+          key: ${{ github.event.repository.name }}-${{ runner.os }}-packages-${{ hashFiles('package-lock.json')}}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
@@ -128,7 +128,7 @@ jobs:
         if: ${{ steps.hasTests.outputs.hasTests == 'true' }}
         uses: phoenix-actions/test-reporting@v12
         with:
-          name: ${{ github.repository }} Test Results
+          name: ${{ github.event.repository.full_name }} Test Results
           path: TestResults/*
           reporter: jest-junit
           output-to: step-summary
@@ -140,5 +140,5 @@ jobs:
             ${{ steps.test-report.outputs.runHtmlUrl }}
       - uses: actions/upload-artifact@v3
         with:
-          name: test-results-${{ github.repository }}-${{ runner.os }}-npm-${{ hashFiles('package-lock.json')}}
+          name: test-results-${{ github.event.repository.name }}-${{ runner.os }}-npm-${{ hashFiles('package-lock.json')}}
           path: TestResults/*
