@@ -101,12 +101,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
+        id: cache
         with:
           path: ~/.npm
           key: ${{ github.repository }}-${{ runner.os }}-npm-${{ hashFiles('package-lock.json')}}
           restore-keys: ${{ github.repository }}-${{ runner.os }}-npm-
-      - name: Install deps
-        run: npm ci
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci --ignore-scripts
       - name: Build the app
         run: npm run build
       - name: Run the tests
