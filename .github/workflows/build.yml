@@ -9,7 +9,7 @@ on:
 
 jobs:
   check-is-dotnet:
-    if: ${{ github.ref == github.event.repository.default_branch }}
+    if: ${{ github.base_ref == github.event.repository.default_branch }}
     runs-on: ubuntu-latest
     outputs:
       isDotnet: ${{ steps.check.outputs.isDotnet }}
@@ -24,7 +24,7 @@ jobs:
           fi
           echo "isDotnet=$isDotnet" >> $GITHUB_OUTPUT
   check-is-node:
-    if: ${{ github.ref == github.event.repository.default_branch }}
+    if: ${{ github.base_ref == github.event.repository.default_branch }}
     runs-on: ubuntu-latest
     outputs:
       isNode: ${{ steps.check.outputs.isNode }}
