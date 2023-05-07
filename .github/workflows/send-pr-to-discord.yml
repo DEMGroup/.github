@@ -27,7 +27,7 @@ jobs:
           descBody=""
           if (${{ github.event.pull_request.body != '' }}); then
             descTitle="**Description:**"
-            descNewLine="\\n"
+            descNewLine="\n"
             descBody="${{ github.event.pull_request.body }}"
           fi
           echo "botName=$name" >> $GITHUB_OUTPUT
@@ -53,9 +53,10 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2.3.1             
         with:
           message: |
-            ### :envelope_with_arrow: ${{ steps.vars.outputs.botName }} Sent a messsage to discord for this PR :outbox_tray:\n\n \
-            **Title**: ${{ github.event.pull_request.title }}\n
-            **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})\n
-            **Author**: <@${{ github.event.pull_request.user.login }}>\n
-            ${{ steps.vars.outputs.descriptionLabel }}${{ steps.vars.outputs.descriptionNewLine }}${{ steps.vars.outputs.descriptionBody }}\n\n
+            ### :envelope_with_arrow: ${{ steps.vars.outputs.botName }} Sent a messsage to discord for this PR :outbox_tray:
+            **Title**: ${{ github.event.pull_request.title }}
+            **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})
+            **Author**: @${{ github.event.pull_request.user.login }}
+            ${{ steps.vars.outputs.descriptionLabel }}
+            ${{ steps.vars.outputs.descriptionBody }}
             If you add a `wip` label before submitting it will skip this next time.

@@ -74,13 +74,24 @@ jobs:
           fi
           echo "hasTests=$hasTest" >> $GITHUB_OUTPUT
       - name: Test Reporter
+        id: test-report
         if: ${{ steps.hasTests.outputs.hasTests == 'true' }}
-        uses: phoenix-actions/test-reporting@v10
+        uses: phoenix-actions/test-reporting@v12
         with:
           name: ${{ github.repository }} Test Results
           path: TestResults/*.trx
           reporter: dotnet-trx
           output-to: step-summary
+      - name: Add the pr comment
+        uses: thollander/actions-comment-pull-request@v2.3.1
+        with:
+          message: |
+            ### :test_tube: Check the test output HTML :heavy_check_mark: :x:
+            ${{ steps.test-report.outputs.runHtmlUrl }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ github.repository }}-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj')}}
+          path: TestResults/*
 
   build-node:
     needs: [check-is-dotnet, check-is-node]
@@ -104,17 +115,28 @@ jobs:
         if: success() || failure()
         id: hasTests
         run: |
-          if compgen -G "testReports/jest-*.xml" > /dev/null; then
+          if compgen -G "TestResults/test-*.xml" > /dev/null; then
             hasTest=true
           else
             hasTest=false
           fi
           echo "hasTests=$hasTest" >> $GITHUB_OUTPUT
       - name: Test Reporter
+        id: test-report
         if: ${{ steps.hasTests.outputs.hasTests == 'true' }}
-        uses: phoenix-actions/test-reporting@v10
+        uses: phoenix-actions/test-reporting@v12
         with:
           name: ${{ github.repository }} Test Results
-          path: testReports/jest-*.xml
+          path: TestResults/*
           reporter: jest-junit
           output-to: step-summary
+      - name: Add the pr comment
+        uses: thollander/actions-comment-pull-request@v2.3.1
+        with:
+          message: |
+            ### :test_tube: Check the test output HTML :heavy_check_mark: :x:
+            ${{ steps.test-report.outputs.runHtmlUrl }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ github.repository }}-${{ runner.os }}-npm-${{ hashFiles('package-lock.json')}}
+          path: TestResults/*
