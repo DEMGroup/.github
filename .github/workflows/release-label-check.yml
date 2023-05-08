@@ -15,7 +15,7 @@ on:
 
 jobs:
   check-project-type:
-    uses: ./.github/workflows/check-project-type.yml
+    uses: DEMGroup/.github/.github/workflows/check-project-type.yml@main
 
   check_labels:
     needs: [check-project-type]
