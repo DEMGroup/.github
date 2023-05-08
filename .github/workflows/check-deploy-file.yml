@@ -5,7 +5,7 @@ on:
 
 jobs:
   check-project-type:
-    uses: ./check-project-type.yml
+    uses: ./.github/workflows/check-project-type.yml
 
   check-deploy-file:
     needs: [check-project-type]

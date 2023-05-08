@@ -15,7 +15,7 @@ on:
 
 jobs:
   check-project-type:
-    uses: ./check-project-type.yml
+    uses: ./.github/workflows/check-project-type.yml
 
   check_labels:
     needs: [check-project-type]
