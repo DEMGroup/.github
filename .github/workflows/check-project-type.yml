@@ -1,7 +1,14 @@
 name: Check Project type (and guard pr for default branch)
 
 on:
-    workflow_call:
+  workflow_call:
+    outputs:
+      isDotnet:
+        description: Boolean value for if a project is dotnet
+        value: ${{ jobs.check-project-type.outputs.isDotnet }}
+      isNode:
+        description: Boolean value for if a project is node
+        value: ${{ jobs.check-project-type.outputs.isNode }}
 
 jobs:
   check-project-type:
