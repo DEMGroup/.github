@@ -2,17 +2,20 @@ name: Check Deploy File
 
 on:
   pull_request:
-    branches:
-      - $default-branch
 
 jobs:
+  check-project-type:
+    uses: ./check-project-type.yml
+
   check-deploy-file:
+    needs: [check-project-type]
+    if: ${{ needs.check-project-type.outputs.isDotnet == 'true' || needs.check-project-type.outputs.isDotnet == true }}
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-        
+
       - name: Check if deploy.yml exists
         id: check-file
         run: |

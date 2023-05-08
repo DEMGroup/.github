@@ -12,10 +12,14 @@ on:
       - '**/*.md'
       - '**/*.yml'
       - '**/*.json'
-    branches: $default-branch
 
 jobs:
+  check-project-type:
+    uses: ./check-project-type.yml
+
   check_labels:
+    needs: [check-project-type]
+
     name: Check labels
     runs-on: ubuntu-latest
     steps:
