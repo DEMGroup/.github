@@ -30,8 +30,8 @@ jobs:
         with:
           no_restore: true
           no_build: true
-          report_name: ${{ github.event.repository.full_name }}-test-results-MMddyyyy
-          report_title: ${{ github.event.repository.full_name }} Test Results
+          report_name: ${{ github.event.repository.name }}-${{ runner.os }}-test-results-MMddyyyy
+          report_title: ${{ github.event.repository.name }} ${{ runner.os }} Test Results
           github_token: ${{ secrets.GITHUB_TOKEN }}
           set_check_status_from_test_outcome: true
           fail_build_on_failed_tests: true
@@ -43,5 +43,5 @@ jobs:
             ${{ steps.test-report.outputs.test_results_path }}
       - uses: actions/upload-artifact@v3
         with:
-          name: test-results-${{ github.event.repository.name.name }}-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj')}}
+          name: ${{ github.event.repository.name }}-${{ runner.os }}-test-results-MMddyyyy-${{ hashFiles('**/*.csproj')}}
           path: ${{ steps.test-report.outputs.test_results_path }}/*
