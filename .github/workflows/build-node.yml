@@ -1,0 +1,54 @@
+name: Build and Test Node
+
+on:
+  workflow_call:
+
+jobs:
+  build-node:
+    runs-on:
+      labels: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: ~/node_modules
+          key: ${{ github.event.repository.name }}-${{ runner.os }}-packages-${{ hashFiles('package-lock.json')}}
+
+      - name: Install dependencies - Skip if cache hit
+        if: (steps.cache.outputs.cache-hit != 'true' && steps.cache.outputs.cache-hit != true)
+        run: npm ci
+
+      - name: Build the app
+        run: npm run build
+      - name: Run the tests
+        run: npm run test:ci
+      - name: Check Test File Exists
+        if: success() || failure()
+        id: hasTests
+        run: |
+          if compgen -G "TestResults/*" > /dev/null; then
+            hasTest=true
+          else
+            hasTest=false
+          fi
+          echo "hasTests=$hasTest" >> $GITHUB_OUTPUT
+      - name: Test Reporter
+        id: test-report
+        if: ${{ steps.hasTests.outputs.hasTests == 'true' }}
+        uses: phoenix-actions/test-reporting@v12
+        with:
+          name: ${{ github.event.repository.full_name }} Test Results
+          path: TestResults/*
+          reporter: jest-junit
+          output-to: step-summary
+      - name: Add the pr comment
+        uses: thollander/actions-comment-pull-request@v2.3.1
+        with:
+          message: |
+            ### :test_tube: Check the test output HTML :heavy_check_mark: :x:
+            ${{ steps.test-report.outputs.runHtmlUrl }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ github.event.repository.name }}-${{ runner.os }}-npm-${{ hashFiles('package-lock.json')}}
+          path: TestResults/*

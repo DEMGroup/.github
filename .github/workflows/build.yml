@@ -12,10 +12,10 @@ jobs:
 
   build-dotnet:
     needs: [check-project-type]
-    if: ${{ (needs.check-project-type.outputs.isDotnet == 'true' || needs.check-project-type.outputs.isDotnet == true) && (needs.check-project-type.outputs.isNode == 'false' || needs.check-project-type.outputs.isNode == false) }}
+    if: ${{needs.check-project-type.outputs.isDotnet == 'true' && needs.check-project-type.outputs.isNode == 'false'}}
     uses: DEMGroup/.github/.github/workflows/build-dotnet.yml@main
 
   build-node:
     needs: [check-project-type]
-    if: ${{ (needs.check-project-type.outputs.isDotnet == 'false' || needs.check-project-type.outputs.isDotnet == false) && (needs.check-project-type.outputs.isNode == 'true' || needs.check-project-type.outputs.isNode == true) }}
+    if: ${{ needs.check-project-type.outputs.isDotnet == 'false' && needs.check-project-type.outputs.isNode == 'true'}}
     uses: DEMGroup/.github/.github/workflows/build-node.yml@main
