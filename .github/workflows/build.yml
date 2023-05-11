@@ -2,115 +2,20 @@ name: Build and Test
 
 on:
   pull_request:
-    paths-ignore:
-      - '**/*.md'
-      - '**/*.yml'
   workflow_call:
 
 jobs:
   check-project-type:
+    # skip if it isn't a PR to (default = main) or direct call
+    if: ${{ github.event_name == 'workflow_call' || (github.event_name == 'pull_request' && github.base_ref == github.event.repository.default_branch) }}
     uses: DEMGroup/.github/.github/workflows/check-project-type.yml@main
 
   build-dotnet:
     needs: [check-project-type]
     if: ${{ (needs.check-project-type.outputs.isDotnet == 'true' || needs.check-project-type.outputs.isDotnet == true) && (needs.check-project-type.outputs.isNode == 'false' || needs.check-project-type.outputs.isNode == false) }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
-      - uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-          # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ github.event.repository.name }}-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj')}}
-          restore-keys: ${{ github.event.repository.name }}-${{ runner.os }}-nuget-
-      - name: Add Github Package Source
-        run: dotnet nuget add source --username DEMGroup --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github.com "https://nuget.pkg.github.com/DEMGroup/index.json"
-      - name: Install dependencies
-        run: dotnet restore -r linux-x64
-      - name: Build
-        run: dotnet build -v=q --configuration Release --no-restore
-      - name: Test
-        run: dotnet test --no-restore --logger trx --results-directory TestResults
-      - name: Check Test File Exists
-        if: success() || failure()
-        id: hasTests
-        run: |
-          if compgen -G "TestResults/*" > /dev/null; then
-            hasTest=true
-          else
-            hasTest=false
-          fi
-          echo "hasTests=$hasTest" >> $GITHUB_OUTPUT
-      - name: Test Reporter
-        id: test-report
-        if: ${{ steps.hasTests.outputs.hasTests == 'true' }}
-        uses: phoenix-actions/test-reporting@v12
-        with:
-          name: ${{ github.event.repository.full_name }} Test Results
-          path: TestResults/*
-          reporter: dotnet-trx
-          output-to: step-summary
-      - name: Add the pr comment
-        uses: thollander/actions-comment-pull-request@v2.3.1
-        with:
-          message: |
-            ### :test_tube: Check the test output HTML :heavy_check_mark: :x:
-            ${{ steps.test-report.outputs.runHtmlUrl }}
-      - uses: actions/upload-artifact@v3
-        with:
-          name: test-results-${{ github.event.repository.name.name }}-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj')}}
-          path: TestResults/*
+    uses: DEMGroup/.github/.github/workflows/build-dotnet.yml@main
 
   build-node:
     needs: [check-project-type]
     if: ${{ (needs.check-project-type.outputs.isDotnet == 'false' || needs.check-project-type.outputs.isDotnet == false) && (needs.check-project-type.outputs.isNode == 'true' || needs.check-project-type.outputs.isNode == true) }}
-    runs-on:
-      labels: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        id: cache
-        with:
-          path: ~/node_modules
-          key: ${{ github.event.repository.name }}-${{ runner.os }}-packages-${{ hashFiles('package-lock.json')}}
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-      - name: Build the app
-        run: npm run build
-      - name: Run the tests
-        run: npm run test:ci
-      - name: Check Test File Exists
-        if: success() || failure()
-        id: hasTests
-        run: |
-          if compgen -G "TestResults/*" > /dev/null; then
-            hasTest=true
-          else
-            hasTest=false
-          fi
-          echo "hasTests=$hasTest" >> $GITHUB_OUTPUT
-      - name: Test Reporter
-        id: test-report
-        if: ${{ steps.hasTests.outputs.hasTests == 'true' }}
-        uses: phoenix-actions/test-reporting@v12
-        with:
-          name: ${{ github.event.repository.full_name }} Test Results
-          path: TestResults/*
-          reporter: jest-junit
-          output-to: step-summary
-      - name: Add the pr comment
-        uses: thollander/actions-comment-pull-request@v2.3.1
-        with:
-          message: |
-            ### :test_tube: Check the test output HTML :heavy_check_mark: :x:
-            ${{ steps.test-report.outputs.runHtmlUrl }}
-      - uses: actions/upload-artifact@v3
-        with:
-          name: test-results-${{ github.event.repository.name }}-${{ runner.os }}-npm-${{ hashFiles('package-lock.json')}}
-          path: TestResults/*
+    uses: DEMGroup/.github/.github/workflows/build-node.yml@main

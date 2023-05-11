@@ -12,7 +12,6 @@ on:
 
 jobs:
   check-project-type:
-    if: ${{ github.event_name == 'pull_request' && github.base_ref == github.event.repository.default_branch }}
     runs-on: ubuntu-latest
     outputs:
       isDotnet: ${{ steps.check.outputs.isDotnet }}
