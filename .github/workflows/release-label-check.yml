@@ -5,11 +5,7 @@ on:
   workflow_call:
 
 jobs:
-  check-project-type:
-    uses: DEMGroup/.github/.github/workflows/check-project-type.yml@main
-
   check_labels:
-    needs: [check-project-type]
     if: ${{ contains(fromJson('["opened", "unlabeled","labeled","reopened","synchronize","ready_for_review"]'), github.event.action) }}
     name: Check labels
     runs-on: ubuntu-latest
