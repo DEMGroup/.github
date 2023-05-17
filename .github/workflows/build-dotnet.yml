@@ -55,3 +55,6 @@ jobs:
         with:
          name: test-results-${{ github.event.repository.name.name }}-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj')}}
          path: TestResults/*
+
+  codeql-dotnet:
+    uses: DEMGroup/.github/.github/workflows/codeql-dotnet.yml@main

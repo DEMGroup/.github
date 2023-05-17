@@ -15,7 +15,7 @@ jobs:
     if: ${{needs.check-project-type-new.outputs.isDotnet == 'true' && needs.check-project-type-new.outputs.isNode == 'false'}}
     uses: DEMGroup/.github/.github/workflows/build-dotnet-new.yml@main
 
-  build-node-new:
+  build-typescript-new:
     needs: [check-project-type-new]
     if: ${{ needs.check-project-type-new.outputs.isDotnet == 'false' && needs.check-project-type-new.outputs.isNode == 'true'}}
-    uses: DEMGroup/.github/.github/workflows/build-node.yml@main
+    uses: DEMGroup/.github/.github/workflows/build-typescript.yml@main
