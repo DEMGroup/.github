@@ -1,8 +1,7 @@
 name: "Code Scanning - Action"
 
 on:
-  pull_request:
-    branches: [main]
+  workflow_call:
   schedule:
     #        ┌───────────── minute (0 - 59)
     #        │  ┌───────────── hour (0 - 23)
