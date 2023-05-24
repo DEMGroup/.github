@@ -14,9 +14,13 @@ jobs:
   check-project-type:
     runs-on: ubuntu-latest
     outputs:
-      isDotnet: ${{ steps.check.outputs.isDotnet }}
-      isNode: ${{ steps.check.outputs.isNode }}
+      isDotnet: ${{ steps.check.outputs.isDotnet || contains(github.event.pull_request.labels.*.name, 'dotnet') }}
+      isNode: ${{ steps.check.outputs.isNode || contains(github.event.pull_request.labels.*.name, 'node') }}
     steps:
+    - name: Short circuit
+      if: (contains(github.event.pull_request.labels.*.name, 'dotnet') || contains(github.event.pull_request.labels.*.name, 'node'))
+      run: exit 0
+
     - uses: actions/checkout@v3
     - name: Project Type Checker
       id: check
@@ -31,3 +35,15 @@ jobs:
             isNode=true
         fi
         echo "isNode=$isNode" >> $GITHUB_OUTPUT
+    - name: Add dotnet label to PR
+      id: label-it-dotnet
+      if: steps.check.outputs.isDotnet
+      uses: actions-ecosystem/action-add-labels@v1.1.0
+      with:
+        labels: dotnet
+    - name: Add node label to PR
+      id: label-it-node
+      if: steps.check.outputs.isNode
+      uses: actions-ecosystem/action-add-labels@v1.1.0
+      with:
+        labels: node

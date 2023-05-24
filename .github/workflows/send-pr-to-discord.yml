@@ -13,9 +13,19 @@ on:
 jobs:
   notify-discord-pr:
     # run on call or open/unlabel/reopen and not wip/Automated Update
-    if: ${{ github.event_name == 'workflow_call' || (github.base_ref == github.event.repository.default_branch && contains(fromJson('["opened", "unlabeled", "edited", "reopened", "ready_for_review"]'), github.event.action) && !contains(github.event.pull_request.labels.*.name, 'wip') && !startsWith(github.event.pull_request.title, 'Automated Update ')) }}
+    if: |
+      github.event_name == 'workflow_call' ||
+      (
+        github.base_ref == github.event.repository.default_branch &&
+        !contains(github.event.pull_request.labels.*.name, 'wip') &&
+        !startsWith(github.event.pull_request.title, 'Automated Update')
+      )
     runs-on: ubuntu-latest
     steps:
+      - name: Short circuit
+        if: contains(github.event.pull_request.labels.*.name, 'discord-pr-sent')
+        run: exit 0
+
       - name: Check for hook url
         env:
           PR_WEBHOOK_URL: ${{ secrets.PR_WEBHOOK_URL }}
@@ -68,3 +78,9 @@ jobs:
             ${{ steps.vars.outputs.descriptionLabel }}
             ${{ steps.vars.outputs.descriptionBody }}
             If you add a `wip` label before submitting it will skip this next time.
+
+      - name: Add dotnet label to PR
+        id: label-it-pr-sent
+        uses: actions-ecosystem/action-add-labels@v1.1.0
+        with:
+          labels: discord-pr-sent
