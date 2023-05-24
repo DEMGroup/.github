@@ -37,14 +37,14 @@ jobs:
         echo "isNode=$isNode" >> $GITHUB_OUTPUT
     - name: Add dotnet label to PR
       id: label-it-dotnet
-      if: steps.check.outputs.isDotnet
+      if: steps.check.outputs.isDotnet == 'true'
       uses: actions-ecosystem/action-add-labels@v1.1.0
       with:
         github_token: ${{ github.token }}
         labels: dotnet
     - name: Add node label to PR
       id: label-it-node
-      if: steps.check.outputs.isNode
+      if: steps.check.outputs.isNode == 'true'
       uses: actions-ecosystem/action-add-labels@v1.1.0
       with:
         github_token: ${{ github.token }}
