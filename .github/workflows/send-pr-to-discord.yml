@@ -2,12 +2,18 @@ name: Send PR message to discord
 
 on:
   pull_request:
+    types:
+      - unlabeled
+      - opened
+      - edited
+      - reopened
+      - ready_for_review
   workflow_call:
 
 jobs:
   notify-discord-pr:
     # run on call or open/unlabel/reopen and not wip/Automated Update
-    if: ${{ github.event_name == 'workflow_call' || (github.base_ref == github.event.repository.default_branch && contains(fromJson('["opened", "unlabeled", "reopened"]'), github.event.action) && !contains(github.event.pull_request.labels.*.name, 'wip') && !startsWith(github.event.pull_request.title, 'Automated Update ')) }}
+    if: ${{ github.event_name == 'workflow_call' || (github.base_ref == github.event.repository.default_branch && contains(fromJson('["opened", "unlabeled", "edited", "reopened", "ready_for_review"]'), github.event.action) && !contains(github.event.pull_request.labels.*.name, 'wip') && !startsWith(github.event.pull_request.title, 'Automated Update ')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Check for hook url

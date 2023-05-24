@@ -2,7 +2,14 @@ name: Check Deploy File
 
 on:
   pull_request:
-    types: [**]
+    types:
+      - labeled
+      - unlabeled
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - ready_for_review
   workflow_call:
 
 jobs:
