@@ -52,5 +52,3 @@ jobs:
         with:
           name: test-results-${{ github.event.repository.name }}-${{ runner.os }}-npm-${{ hashFiles('package-lock.json')}}
           path: TestResults/*
-  codeql-typescript:
-    uses: DEMGroup/.github/.github/workflows/codeql-typescript.yml@main

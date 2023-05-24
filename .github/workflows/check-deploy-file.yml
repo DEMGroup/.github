@@ -2,6 +2,7 @@ name: Check Deploy File
 
 on:
   pull_request:
+    types: [**]
   workflow_call:
 
 jobs:
