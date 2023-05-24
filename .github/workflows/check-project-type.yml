@@ -40,10 +40,12 @@ jobs:
       if: steps.check.outputs.isDotnet
       uses: actions-ecosystem/action-add-labels@v1.1.0
       with:
+        github_token: ${{ github.token }}
         labels: dotnet
     - name: Add node label to PR
       id: label-it-node
       if: steps.check.outputs.isNode
       uses: actions-ecosystem/action-add-labels@v1.1.0
       with:
+        github_token: ${{ github.token }}
         labels: node

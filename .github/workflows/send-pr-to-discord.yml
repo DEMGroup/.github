@@ -83,4 +83,5 @@ jobs:
         id: label-it-pr-sent
         uses: actions-ecosystem/action-add-labels@v1.1.0
         with:
+          github_token: ${{ github.token }}
           labels: discord-pr-sent
