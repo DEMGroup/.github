@@ -13,6 +13,13 @@ on:
   workflow_call:
 
 jobs:
+  short-circuit-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Short circuit
+        if: contains(github.event.pull_request.labels.*.name, 'deploy-file-exists')
+        run: exit 0
+
   check-project-type:
     uses: DEMGroup/.github/.github/workflows/check-project-type.yml@main
 
@@ -34,3 +41,10 @@ jobs:
             echo "::error  title=Deploy File is Missing::Could not find Deploy.yml"
             exit 1
           fi
+
+      - name: Add dotnet label to PR
+        id: label-already-checked-deploy
+        uses: actions-ecosystem/action-add-labels@v1.1.0
+        with:
+          github_token: ${{ github.token }}
+          labels: deploy-file-exists

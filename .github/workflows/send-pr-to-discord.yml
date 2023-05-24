@@ -11,6 +11,13 @@ on:
   workflow_call:
 
 jobs:
+  short-circuit-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Short circuit
+        if: contains(github.event.pull_request.labels.*.name, 'discord-pr-sent')
+        run: exit 0
+
   notify-discord-pr:
     # run on call or open/unlabel/reopen and not wip/Automated Update
     if: |
@@ -22,10 +29,6 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
-      - name: Short circuit
-        if: contains(github.event.pull_request.labels.*.name, 'discord-pr-sent')
-        run: exit 0
-
       - name: Check for hook url
         env:
           PR_WEBHOOK_URL: ${{ secrets.PR_WEBHOOK_URL }}
