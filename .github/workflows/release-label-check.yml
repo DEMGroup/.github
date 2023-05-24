@@ -2,11 +2,12 @@ name: Release Label Checker
 
 on:
   pull_request:
+    types: [**]
   workflow_call:
 
 jobs:
   check_labels:
-    if: ${{ contains(fromJson('["opened", "unlabeled","labeled","reopened","synchronize","ready_for_review"]'), github.event.action) }}
+    if: contains(fromJson('["opened", "unlabeled","labeled","reopened","synchronize","ready_for_review"]'), github.event.action)
     name: Check labels
     runs-on: ubuntu-latest
     steps:
