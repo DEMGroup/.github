@@ -30,4 +30,6 @@ jobs:
         !contains(github.event.pull_request.labels.*.name, 'release/minor') &&
         !contains(github.event.pull_request.labels.*.name, 'release/patch') &&
         !contains(github.event.pull_request.labels.*.name, 'release/skip')
-      run: exit 1
+      run: |
+        echo "::error title=Missing Label::Release label is missing. Must contain one of: ['release/major','release/minor','release/patch','release/skip']"
+        exit 1

@@ -31,5 +31,6 @@ jobs:
           if [ -f ".github/workflows/deploy.yml" ]; then
             exit 0
           else
+            echo "::error  title=Deploy File is Missing::Could not find Deploy.yml"
             exit 1
           fi
