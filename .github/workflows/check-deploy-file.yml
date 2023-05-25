@@ -13,14 +13,8 @@ on:
   workflow_call:
 
 jobs:
-  short-circuit-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Short circuit
-        if: contains(github.event.pull_request.labels.*.name, 'deploy-file-exists')
-        run: exit 0
-
   check-project-type:
+    if: !contains(github.event.pull_request.labels.*.name, 'deploy-file-exists')
     uses: DEMGroup/.github/.github/workflows/check-project-type.yml@main
 
   check-deploy-file:
