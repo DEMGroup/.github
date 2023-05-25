@@ -23,7 +23,7 @@ jobs:
 
   check-project-type:
     needs: [sc1, sc2]
-    if: needs.sc1.outputs.short-circuit == 'false' && needs.sc2.outputs.short-circuit == 'false'
+    if: needs.sc1.outputs.short-circuit != 'true' && needs.sc2.outputs.short-circuit != 'true'
     runs-on: ubuntu-latest
     outputs:
       isDotnet: ${{ steps.check.outputs.isDotnet }}

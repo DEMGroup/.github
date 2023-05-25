@@ -20,7 +20,7 @@ jobs:
 
   check-project-type:
     needs: [short-circuit]
-    if: needs.short-circuit.outputs.short-circuit == 'false'
+    if: needs.short-circuit.outputs.short-circuit != 'true'
     uses: DEMGroup/.github/.github/workflows/check-project-type.yml@main
 
   check-deploy-file:

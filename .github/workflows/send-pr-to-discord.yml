@@ -20,7 +20,7 @@ jobs:
     needs: [short-circuit]
     # run on call or open/unlabel/reopen and not wip/Automated Update
     if: |
-      needs.short-circuit.outputs.short-circuit == 'false' &&
+      needs.short-circuit.outputs.short-circuit != 'true' &&
       github.event_name == 'workflow_call' ||
       (
         github.base_ref == github.event.repository.default_branch &&
