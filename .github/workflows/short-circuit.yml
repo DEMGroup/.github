@@ -1,0 +1,25 @@
+name: Checks a jobs PR label to short circuit
+
+on:
+  workflow_call:
+    inputs:
+      short-circuit-label:
+        description: The label to check to short circuit the job
+        required: true
+        type: string
+    outputs:
+      short-circuit:
+        description: "Boolean string representing if the job should short circuit ('true' should short, 'false' should not)"
+        value: ${{ jobs.short-circuit-check.outputs.short-circuit }}
+
+jobs:
+  short-circuit-check:
+    outputs:
+      short-circuit: ${{ steps.check-and-short.outputs.short-circuit }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Short circuit
+        id: check-and-short
+        if: contains(github.event.pull_request.labels.*.name, inputs.short-circuit-label)
+        run: echo "short-circuit=true" >> $GITHUB_OUTPUT

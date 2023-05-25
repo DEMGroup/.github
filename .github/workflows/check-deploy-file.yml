@@ -13,13 +13,19 @@ on:
   workflow_call:
 
 jobs:
+  short-circuit:
+    uses: DEMGroup/.github/.github/workflows/short-circuit.yml@main
+    with:
+      short-circuit-label: 'deploy-file-exists'
+
   check-project-type:
-    if: !contains(github.event.pull_request.labels.*.name, 'deploy-file-exists')
+    needs: [short-circuit]
+    if: needs.short-circuit.outputs.short-circuit == 'false'
     uses: DEMGroup/.github/.github/workflows/check-project-type.yml@main
 
   check-deploy-file:
     needs: [check-project-type]
-    if: ${{ needs.check-project-type.outputs.isDotnet == 'true' || needs.check-project-type.outputs.isDotnet == true }}
+    if: needs.check-project-type.outputs.isDotnet == 'true' || needs.check-project-type.outputs.isDotnet == true
     runs-on: ubuntu-latest
 
     steps:

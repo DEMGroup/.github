@@ -5,22 +5,30 @@ on:
     outputs:
       isDotnet:
         description: Boolean value for if a project is dotnet
-        value: ${{ jobs.check-project-type.outputs.isDotnet }}
+        value: ${{ jobs.check-project-type.outputs.isDotnet || contains(github.event.pull_request.labels.*.name, 'dotnet') }}
       isNode:
         description: Boolean value for if a project is node
-        value: ${{ jobs.check-project-type.outputs.isNode }}
+        value: ${{ jobs.check-project-type.outputs.isNode || contains(github.event.pull_request.labels.*.name, 'node') }}
 
 jobs:
+  sc1:
+    uses: DEMGroup/.github/.github/workflows/short-circuit.yml@main
+    with:
+      short-circuit-label: 'node'
+  sc2:
+    uses: DEMGroup/.github/.github/workflows/short-circuit.yml@main
+    with:
+      short-circuit-label: 'dotnet'
+
+
   check-project-type:
+    needs: [sc1, sc2]
+    if: needs.sc1.outputs.short-circuit == 'false' && needs.sc2.outputs.short-circuit == 'false'
     runs-on: ubuntu-latest
     outputs:
-      isDotnet: ${{ steps.check.outputs.isDotnet || contains(github.event.pull_request.labels.*.name, 'dotnet') }}
-      isNode: ${{ steps.check.outputs.isNode || contains(github.event.pull_request.labels.*.name, 'node') }}
+      isDotnet: ${{ steps.check.outputs.isDotnet }}
+      isNode: ${{ steps.check.outputs.isNode }}
     steps:
-    - name: Short circuit
-      if: (contains(github.event.pull_request.labels.*.name, 'dotnet') || contains(github.event.pull_request.labels.*.name, 'node'))
-      run: exit 0
-
     - uses: actions/checkout@v3
     - name: Project Type Checker
       id: check
