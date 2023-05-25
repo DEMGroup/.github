@@ -21,14 +21,18 @@ jobs:
     # run on call or open/unlabel/reopen and not wip/Automated Update
     if: |
       needs.short-circuit.outputs.short-circuit != 'true' &&
-      github.event_name == 'workflow_call' ||
       (
-        github.base_ref == github.event.repository.default_branch &&
-        !contains(github.event.pull_request.labels.*.name, 'wip') &&
-        !startsWith(github.event.pull_request.title, 'Automated Update')
+        github.event_name == 'workflow_call' ||
+        (
+          github.base_ref == github.event.repository.default_branch &&
+          !contains(github.event.pull_request.labels.*.name, 'wip') &&
+          !startsWith(github.event.pull_request.title, 'Automated Update')
+        )
       )
     runs-on: ubuntu-latest
     steps:
+      - name: Just check
+        run: echo "is value ${{needs.short-circuit.outputs.short-circuit}} str${{needs.short-circuit.outputs.short-circuit=='true'}} bool${{needs.short-circuit.outputs.short-circuit==true}}"
       - name: Check for hook url
         env:
           PR_WEBHOOK_URL: ${{ secrets.PR_WEBHOOK_URL }}
