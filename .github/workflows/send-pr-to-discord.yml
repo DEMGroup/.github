@@ -31,8 +31,6 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
-      - name: Just check
-        run: echo "is value ${{needs.short-circuit.outputs.short-circuit}} str${{needs.short-circuit.outputs.short-circuit=='true'}} bool${{needs.short-circuit.outputs.short-circuit==true}}"
       - name: Check for hook url
         env:
           PR_WEBHOOK_URL: ${{ secrets.PR_WEBHOOK_URL }}
