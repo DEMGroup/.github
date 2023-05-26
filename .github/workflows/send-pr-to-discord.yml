@@ -70,6 +70,9 @@ jobs:
       - name: Set vars
         id: vars
         run: |
+          function delimiter(){
+            openssl rand -hex 8
+          }
           name=$(echo "${{github.repository}} PR Hook Bot" | sed 's/DEMGroup\///g')
           title=$(echo "${{github.repository}} PR #${{ github.event.pull_request.number }}" | sed s/"DEMGroup\/"//)
          
@@ -82,15 +85,34 @@ jobs:
             descNewLine="\n"
             # descBody=$(echo "${{ github.event.pull_request.body }}" | base64 | tr -d '\n')
           fi
+          
+          # BOT NAME
+          {
+            echo "botName<<${delimiter}"
+            echo $name
+            echo "${delimiter}"
+          } >> $GITHUB_OUTPUT
 
-          echo "botName=$name" >> $GITHUB_OUTPUT
-          echo "prTitle=$title" >> $GITHUB_OUTPUT
-          echo "descriptionLabel=$descTitle" >> $GITHUB_OUTPUT
-  
-          echo "descriptionBody<<EOF" >> $GITHUB_OUTPUT
-          echo "${{ github.event.pull_request.body }}" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
+          # PR TITLE
+          {
+            echo "prTitle<<${delimiter}"
+            echo $title
+            echo "${delimiter}"
+          } >> $GITHUB_OUTPUT
+          # descriptionLabel
+          {
+            echo "descTitle<<${delimiter}"
+            echo $descTitle
+            echo "${delimiter}"
+          } >> $GITHUB_OUTPUT
+          # body
+          {
+            echo "descriptionBody<<${delimiter}"
+            echo "${{ github.event.pull_request.body }}"
+            echo "${delimiter}"
+          } >> $GITHUB_OUTPUT
+          
+    
  
       - name: Discord Webhook Action
         uses: tsickert/discord-webhook@v5.3.0
