@@ -85,7 +85,9 @@ jobs:
           if (${{ github.event.pull_request.body != '' }}); then
             descTitle="**Description:**"
             descNewLine="\n"
-            descBody="${{ github.event.pull_request.body }}"
+            SAFE_BODY=$(echo "${{ github.event.pull_request.body }}" | sed 's/"/\\"/g')
+            echo "SAFE_BODY=$SAFE_BODY"
+            descBody="$SAFE_BODY"
           fi
 
           # GITHUB_OUTPUT=$( cat << EOF
