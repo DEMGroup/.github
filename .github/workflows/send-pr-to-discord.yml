@@ -70,19 +70,24 @@ jobs:
       - name: Set vars
         id: vars
         run: |
-          echo "EMPTY_TITLE = ${{github.repository}} pr #${{ github.event.pull_request.number }}"
-          echo "EMPTY_NAME = ${{github.repository}} PR Hook Bot" 
 
-          name=$(echo "${{github.repository}} PR Hook Bot" | sed s/"DEMGroup\/"//)
-          title=$(echo "${{github.repository}} pr #${{ github.event.pull_request.number }}" | sed s/"demgroup\/"//)
+          name=$(echo "${{github.repository}} PR Hook Bot" | sed 's/DEMGroup\///g')
+          title=$(echo "${{github.repository}} pr #${{ github.event.number }}" | sed 's/DEMGroup\///g')
+          echo "NAME=$name"
+          echo "TITLE=$title" 
+          echo "BODY=${{ github.event.pull_request.body }}"
+          BODY_CLEAN=$(echo "${{github.event.pull_request.body}}" | sed 's/\r$//')
+          echo "BODY_REPLACED_NEWLINES=$BODY_CLEAN"
           descTitle=""
           descNewLine=""
           descBody=""
+
           if (${{ github.event.pull_request.body != '' }}); then
             descTitle="**Description:**"
             descNewLine="\n"
             descBody="${{ github.event.pull_request.body }}"
           fi
+
           echo "botName=$name" >> $GITHUB_OUTPUT
           echo "prTitle=$title" >> $GITHUB_OUTPUT
 
