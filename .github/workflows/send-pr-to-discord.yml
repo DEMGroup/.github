@@ -15,7 +15,7 @@ jobs:
   short-circuit:
     uses: DEMGroup/.github/.github/workflows/short-circuit.yml@main
     with:
-      short-circuit-label: 'discord-pr-sent'
+      short-circuit-label: "discord-pr-sent"
 
   notify-discord-pr:
     needs: [short-circuit]
@@ -32,6 +32,32 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+      # NATHANS SHIT HERE
+
       - name: Check for hook url
         env:
           PR_WEBHOOK_URL: ${{ secrets.PR_WEBHOOK_URL }}
@@ -44,8 +70,11 @@ jobs:
       - name: Set vars
         id: vars
         run: |
+          echo "EMPTY_TITLE = ${{github.repository}} pr #${{ github.event.pull_request.number }}"
+          echo "EMPTY_NAME = ${{github.repository}} PR Hook Bot" 
+
           name=$(echo "${{github.repository}} PR Hook Bot" | sed s/"DEMGroup\/"//)
-          title=$(echo "${{github.repository}} PR #${{ github.event.pull_request.number }}" | sed s/"DEMGroup\/"//)
+          title=$(echo "${{github.repository}} pr #${{ github.event.pull_request.number }}" | sed s/"demgroup\/"//)
           descTitle=""
           descNewLine=""
           descBody=""
