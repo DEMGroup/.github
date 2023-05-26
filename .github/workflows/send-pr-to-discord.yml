@@ -88,8 +88,16 @@ jobs:
           echo "descriptionLabel=$descTitle" >> $GITHUB_OUTPUT
           echo "descriptionNewLine=$descNewLine" >> $GITHUB_OUTPUT
           echo "descriptionBody=$descBody" >> $GITHUB_OUTPUT
-     
 
+      - name: something
+        id: set-output
+        uses: actions/github-script@v5
+        with:
+          script: |
+            # Assuming we have a `content` environment variable or output of previous step
+            core.setOutput("pr_desc", `${{ github.event.pull_request.body }}`);  
+      
+ 
       - name: Discord Webhook Action
         uses: tsickert/discord-webhook@v5.3.0
         with:
@@ -101,7 +109,7 @@ jobs:
             "**Title**: ${{ github.event.pull_request.title }}\n
             **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})\n
             **Author**: <@${{ github.event.pull_request.user.login }}>\n
-            ${{ steps.vars.outputs.descriptionLabel }}${{ steps.vars.outputs.descriptionNewLine }}${{ steps.vars.outputs.descriptionBody }}"
+            ${{ steps.vars.outputs.descriptionLabel }} \n ${{ steps.vars.outputs.pr_desc }}" 
       - name: Add the pr comment
         uses: thollander/actions-comment-pull-request@v2.3.1
         with:
