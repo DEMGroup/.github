@@ -80,7 +80,7 @@ jobs:
           else
             descTitle="**Description:**"
             descNewLine="\n"
-            descBody=$(echo "${{ github.event.pull_request.body }}" | base64 )
+            descBody=$(echo "${{ github.event.pull_request.body }}" | base64 | tr -d '\n')
           fi
 
           echo "botName=$name" >> $GITHUB_OUTPUT
