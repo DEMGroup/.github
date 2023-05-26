@@ -70,7 +70,7 @@ jobs:
       - name: Set vars
         id: vars
         run: |
-          name=$(echo "${{github.repository}} PR Hook Bot" | sed sed s/"DEMGroup\/"//)
+          name=$(echo "${{github.repository}} PR Hook Bot" | sed s/"DEMGroup\/"//)
           title=$(echo "${{github.repository}} PR #${{ github.event.pull_request.number }}" | sed s/"DEMGroup\/"//)
          
           if (${{ github.event.pull_request.body == '' }}); then
