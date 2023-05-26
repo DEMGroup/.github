@@ -86,8 +86,8 @@ jobs:
           echo "botName=$name" >> $GITHUB_OUTPUT
           echo "prTitle=$title" >> $GITHUB_OUTPUT
           echo "descriptionLabel=$descTitle" >> $GITHUB_OUTPUT
-          # echo "descriptionNewLine=$descNewLine" >> $GITHUB_OUTPUT
-          echo "descriptionBody=<<EOF" >> $GITHUB_OUTPUT
+  
+          echo "descriptionBody<<EOF" >> $GITHUB_OUTPUT
           echo "${{ github.event.pull_request.body }}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
