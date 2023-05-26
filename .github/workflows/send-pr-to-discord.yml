@@ -76,7 +76,7 @@ jobs:
           
 
           name=$(echo "${{github.repository}} PR Hook Bot" | sed 's/DEMGroup\///g')
-          title=$(echo "${{github.repository}} pr #${{ github.event.number }}" | sed 's/DEMGroup\///g')
+          title=$(echo "${{github.repository}} PR #${{ github.event.pull_request.number }}" | sed s/"DEMGroup\/"//)
          
           descTitle=""
           descNewLine=""
