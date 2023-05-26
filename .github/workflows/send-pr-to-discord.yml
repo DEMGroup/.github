@@ -87,10 +87,8 @@ jobs:
           echo "prTitle=$title" >> $GITHUB_OUTPUT
           echo "descriptionLabel=$descTitle" >> $GITHUB_OUTPUT
           
-          DESC="${{ github.event.pull_request.body }}"
-          DESC="${DESC//'%'/'%25'}"
-          DESC="${DESC//$'\n'/'%0A'}"
-          DESC="${DESC//$'\r'/'%0D'}"
+          DESC="${{ github.event.pull_request.body }} | sed "s/'%'/'%25'/g" | sed 's/$'\n'/'%0A'/g" | sed 's/$'\r'/'%0D'/g""
+         
 
           echo "descriptionBody=$DESC" >> $GITHUB_OUTPUT
           # echo "${{ github.event.pull_request.body }}" >> $GITHUB_OUTPUT
