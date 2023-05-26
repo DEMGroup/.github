@@ -88,28 +88,28 @@ jobs:
           
           # BOT NAME
           {
-            echo "botName<<${delimiter}"
+            echo "botName<<$(delimiter)"
             echo $name
-            echo "${delimiter}"
+            echo "$(delimiter)"
           } >> $GITHUB_OUTPUT
 
           # PR TITLE
           {
-            echo "prTitle<<${delimiter}"
+            echo "prTitle<<$(delimiter)"
             echo $title
-            echo "${delimiter}"
+            echo "$(delimiter)"
           } >> $GITHUB_OUTPUT
           # descriptionLabel
           {
-            echo "descTitle<<${delimiter}"
+            echo "descTitle<<$(delimiter)"
             echo $descTitle
-            echo "${delimiter}"
+            echo "$(delimiter)"
           } >> $GITHUB_OUTPUT
           # body
           {
-            echo "descriptionBody<<${delimiter}"
+            echo "descriptionBody<<$(delimiter)"
             echo "${{ github.event.pull_request.body }}"
-            echo "${delimiter}"
+            echo "$(delimiter)"
           } >> $GITHUB_OUTPUT
           
     
