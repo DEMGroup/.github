@@ -86,7 +86,7 @@ jobs:
           echo "botName=$name" >> $GITHUB_OUTPUT
           echo "prTitle=$title" >> $GITHUB_OUTPUT
           echo "descriptionLabel=$descTitle" >> $GITHUB_OUTPUT
-          echo "descriptionNewLine=$descNewLine" >> $GITHUB_OUTPUT
+          # echo "descriptionNewLine=$descNewLine" >> $GITHUB_OUTPUT
           # echo "descriptionBody=$descBody" >> $GITHUB_OUTPUT
 
       - name: something
@@ -94,7 +94,6 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
-            # Assuming we have a `content` environment variable or output of previous step
             core.setOutput("pr_desc", `${{ github.event.pull_request.body }}`);  
       
  
