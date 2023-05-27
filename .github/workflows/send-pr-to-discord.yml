@@ -77,7 +77,7 @@ jobs:
             descBody=""
           else
             echo  "descBody<<EOF"  >> $PR_BODY
-            echo -e "$(echo  ${{github.event.pull_request.body}})" >> $PR_BODY
+            echo -e "${{github.event.pull_request.body}}" >> $PR_BODY
             echo "EOF" >> $PR_BODY
 
 
