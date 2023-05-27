@@ -92,7 +92,7 @@ jobs:
   
       - name: Custom Discord PR message
         run: |
-          # descBody=$(echo "${{ steps.vars.outputs.descriptionBody }}" |sed  's/%0D%0A/\\n/g')
+          descBody=$(echo "${{ steps.vars.outputs.descriptionBody }}" |sed  's/%0D%0A/\\n/g')
 
           generate_post_data() {
               cat <<EOF
@@ -101,7 +101,7 @@ jobs:
                 "embeds": [
                   {
                     "title": "${{ steps.vars.outputs.prTitle }}",
-                    "description": "**Title**: ${{ github.event.pull_request.title }}\n **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})\n**Author**: <@${{ github.event.pull_request.user.login }}>\n${{ steps.vars.outputs.descriptionLabel }}\n${{ github.event.pull_request.body }}",
+                    "description": "**Title**: ${{ github.event.pull_request.title }}\n **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})\n**Author**: <@${{ github.event.pull_request.user.login }}>\n${{ steps.vars.outputs.descriptionLabel }}\n$descBody",
                     "color": null
                   }
                 ],
