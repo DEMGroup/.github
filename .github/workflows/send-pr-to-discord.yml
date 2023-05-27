@@ -97,7 +97,7 @@ jobs:
           embed-title: "${{ steps.vars.outputs.prTitle }}"
           embed-description:
             "**Title**: ${{ github.event.pull_request.title }}\n
-            **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})\n
+            **Link**: [${{steps.vars.outputs.descTitle}}](${{github.event.pull_request.html_url}})\n
             **Author**: <@${{ github.event.pull_request.user.login }}>\n
             ${{ steps.vars.outputs.descriptionLabel }} \n ${{ env.descBody }}" 
       - name: Add the pr comment
