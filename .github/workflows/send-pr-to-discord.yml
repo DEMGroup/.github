@@ -90,20 +90,43 @@ jobs:
           echo "descriptionBody=$descBody" >> $GITHUB_OUTPUT
       
   
-
+      - name: Custom Discord PR message
+        run: |
+          descBody="${{ steps.vars.outputs.descriptionBody }}"
+          descBody="${descBody//'%25'/'%'}"
+          descBody="${descBody//'%0A'/$'\n'}"
+          descBody="${descBody//'%0D'/$'\r'}"
+          generate_post_data() {
+              cat <<EOF
+              {
+                "content": null,
+                "embeds": [
+                  {
+                    "title": "${{ steps.vars.outputs.prTitle }}",
+                    "description": "**Title**: ${{ github.event.pull_request.title }}\n **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})\n**Author**: <@${{ github.event.pull_request.user.login }}>\n${{ steps.vars.outputs.descriptionLabel }}\n$SAFE_DESC",
+                    "color": null
+                  }
+                ],
+                "username": "${{ steps.vars.outputs.botName }}",
+                "avatar_url": "https://app.aesircrypto.com/assets/logo.png",
+                "attachments": []
+              }
+            EOF
+          }
+          curl -H "Content-Type: application/json" -X POST -d "$(generate_post_data)" ${{ secrets.PR_WEBHOOK_URL }}
  
-      - name: Discord Webhook Action
-        uses: tsickert/discord-webhook@v5.3.0
-        with:
-          webhook-url: ${{ secrets.PR_WEBHOOK_URL }}
-          username: "${{ steps.vars.outputs.botName }}"
-          avatar-url: "https://app.aesircrypto.com/assets/logo.png"
-          embed-title: "${{ steps.vars.outputs.prTitle }}"
-          embed-description:
-            "**Title**: ${{ github.event.pull_request.title }}\n
-            **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})\n
-            **Author**: <@${{ github.event.pull_request.user.login }}>\n
-            ${{ steps.vars.outputs.descriptionLabel }} \n ${{ steps.vars.outputs.descriptionBody }}" 
+      # - name: Discord Webhook Action
+      #   uses: tsickert/discord-webhook@v5.3.0
+      #   with:
+      #     webhook-url: ${{ secrets.PR_WEBHOOK_URL }}
+      #     username: "${{ steps.vars.outputs.botName }}"
+      #     avatar-url: "https://app.aesircrypto.com/assets/logo.png"
+      #     embed-title: "${{ steps.vars.outputs.prTitle }}"
+      #     embed-description:
+      #       "**Title**: ${{ github.event.pull_request.title }}\n
+      #       **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})\n
+      #       **Author**: <@${{ github.event.pull_request.user.login }}>\n
+      #       ${{ steps.vars.outputs.descriptionLabel }} \n ${{ steps.vars.outputs.descriptionBody }}" 
       - name: Add the pr comment
         uses: thollander/actions-comment-pull-request@v2.3.1
         with:
