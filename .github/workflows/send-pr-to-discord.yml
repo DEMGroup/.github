@@ -76,9 +76,9 @@ jobs:
             descTitle=""
             descBody=""
           else
-            echo  "descBody<<EOF"  >> $PR_BODY
-            echo -e "${{github.event.pull_request.body}}" >> $PR_BODY
-            echo "EOF" >> $PR_BODY
+            echo  "descBody<<EOF"  >> $GITHUB_ENV
+            echo -e "${{github.event.pull_request.body}}" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
 
 
           fi
