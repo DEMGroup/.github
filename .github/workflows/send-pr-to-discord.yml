@@ -92,7 +92,7 @@ jobs:
   
       - name: Custom Discord PR message
         run: |
-          # descBody=$(echo "${{ steps.vars.outputs.descriptionBody }}" |sed  's/%0D%0A/\r\n/g')
+          # descBody=$(echo "${{ steps.vars.outputs.descriptionBody }}" |sed  's/%0D%0A/\\n/g')
 
           generate_post_data() {
               cat <<EOF
