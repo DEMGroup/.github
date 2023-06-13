@@ -32,32 +32,6 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
-      # NATHANS SHIT HERE
-
       - name: Check for hook url
         env:
           PR_WEBHOOK_URL: ${{ secrets.PR_WEBHOOK_URL }}
@@ -71,7 +45,7 @@ jobs:
         id: vars
         run: |
           prLink=$(echo "${{github.repository}} PR #${{ github.event.pull_request.number }}" | sed s/"DEMGroup\/"//)
-          descTitle=$(echo "${{github.repository}} PR #${{ github.event.pull_request.number }}" | sed s/"DEMGroup\/"//)
+          descTitle="Description:"
 
           if (${{ github.event.pull_request.body == '' }}); then
             descTitle=""
@@ -80,10 +54,7 @@ jobs:
             echo  "descBody<<EOF"  >> $GITHUB_ENV
             echo -e "${{github.event.pull_request.body}}" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
-
-
           fi
-
           echo "botName=$(echo "${{github.repository}} PR Hook Bot" | sed 's/DEMGroup\///g')" >> $GITHUB_OUTPUT
           echo "prTitle=${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
           echo "descriptionLabel=$descTitle" >> $GITHUB_OUTPUT
@@ -102,6 +73,7 @@ jobs:
             **Link**: [${{steps.vars.outputs.prLink}}](${{github.event.pull_request.html_url}})\n
             **Author**: <@${{ github.event.pull_request.user.login }}>\n
             ${{ steps.vars.outputs.descriptionLabel }} \n ${{ env.descBody }}"
+
       - name: Add the pr comment
         uses: thollander/actions-comment-pull-request@v2.3.1
         with:
@@ -111,7 +83,7 @@ jobs:
             **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})
             **Author**: @${{ github.event.pull_request.user.login }}
             ${{ steps.vars.outputs.descriptionLabel }}
-            ${{ steps.vars.outputs.descriptionBody }}
+            ${{ env.descBody }}
             If you add a `wip` label before submitting it will skip this next time.
 
       - name: Add dotnet label to PR
