@@ -5,8 +5,7 @@ on:
 
 jobs:
   build-typescript:
-    runs-on:
-      labels: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
