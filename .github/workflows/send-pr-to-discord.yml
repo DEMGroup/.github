@@ -30,7 +30,7 @@ jobs:
           !startsWith(github.event.pull_request.title, 'Automated Update')
         )
       )
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
       - name: Check for hook url
         env:
