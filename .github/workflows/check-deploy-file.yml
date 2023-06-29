@@ -26,7 +26,7 @@ jobs:
   check-deploy-file:
     needs: [check-project-type]
     if: needs.check-project-type.outputs.isDotnet == 'true' || needs.check-project-type.outputs.isDotnet == true
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
 
     steps:
       - name: Checkout Repository
