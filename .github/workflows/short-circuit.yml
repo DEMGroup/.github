@@ -17,7 +17,7 @@ jobs:
     outputs:
       short-circuit: ${{ steps.check-and-short.outputs.short-circuit }}
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
       - name: Short circuit
         id: check-and-short
