@@ -1,37 +1,24 @@
-name: Send PR message to discord
+name: Send message about issues to discord
 
 on:
-  pull_request:
-    types:
-      - unlabeled
-      - opened
-      - edited
-      - reopened
-      - synchronize
-      - ready_for_review
-  workflow_call:
+  issues:
+    types: [opened, edited, closed, reopened, assigned, unassigned]
 
 jobs:
-  short-circuit:
-    uses: DEMGroup/.github/.github/workflows/short-circuit.yml@main
-    with:
-      short-circuit-label: "discord-pr-sent"
-
-  notify-discord-pr:
-    needs: [short-circuit]
-    # run on call or open/unlabel/reopen and not wip/Automated Update
-    if: |
-      needs.short-circuit.outputs.short-circuit != 'true' &&
-      (
-        github.event_name == 'workflow_call' ||
-        (
-          github.base_ref == github.event.repository.default_branch &&
-          !contains(github.event.pull_request.labels.*.name, 'wip') &&
-          !startsWith(github.event.pull_request.title, 'Automated Update')
-        )
-      )
-    runs-on: [self-hosted]
+  notify-discord-issue:
+    runs-on: ubuntu-latest
     steps:
+      - name: Cache timeout
+        id: cache-timeout
+        uses: actions/cache@v3
+        with:
+          path: issues-sent
+          key: issue-${{ github.event.issue.id }}
+
+      - name: Generate Prime Numbers
+        if: steps.cache-primes.outputs.cache-hit != 'true'
+        run: /generate-primes.sh -d prime-numbers
+
       - name: Check for hook url
         env:
           PR_WEBHOOK_URL: ${{ secrets.PR_WEBHOOK_URL }}
@@ -44,21 +31,25 @@ jobs:
       - name: Set vars
         id: vars
         run: |
-          prLink=$(echo "${{github.repository}} PR #${{ github.event.pull_request.number }}" | sed s/"DEMGroup\/"//)
-          descTitle="Description:"
+          issueLink=$(echo "${{github.repository}} Issue #${{ github.event.issue.number }}" | sed s/"DEMGroup\/"//)
 
-          if (${{ github.event.pull_request.body == '' }}); then
+
+          if (${{ github.event.issue.body == '' }}); then
             descTitle=""
             descBody=""
           else
             echo  "descBody<<EOF"  >> $GITHUB_ENV
-            echo -e "${{github.event.pull_request.body}}" >> $GITHUB_ENV
+            echo -e "${{github.event.issue.body}}" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
           fi
-          echo "botName=$(echo "${{github.repository}} PR Hook Bot" | sed 's/DEMGroup\///g')" >> $GITHUB_OUTPUT
-          echo "prTitle=${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
+
+          images=($(grep -Eo "https?://[^][ ]+\.(jpg|png|gif|jpeg)" <<< "$descBody"))
+          for i in ${iamges[@]}; do
+            imageObj=
+          echo "botName=$(echo "${{github.repository}} Issue Hook Bot" | sed 's/DEMGroup\///g')" >> $GITHUB_OUTPUT
+          echo "issueTitle=${{ github.event.issue.title }}" >> $GITHUB_OUTPUT
           echo "descriptionLabel=$descTitle" >> $GITHUB_OUTPUT
-          echo "prLink=$prLink" >> $GITHUB_OUTPUT
+          echo "issueLink=$issueLink" >> $GITHUB_OUTPUT
 
       - name: Discord Webhook Action
         uses: tsickert/discord-webhook@v5.3.0
@@ -66,10 +57,10 @@ jobs:
           webhook-url: ${{ secrets.PR_WEBHOOK_URL }}
           username: "${{ steps.vars.outputs.botName }}"
           avatar-url: "https://app.aesircrypto.com/assets/logo.png"
-          embed-title: "${{ steps.vars.outputs.prTitle }}"
+          embed-title: "${{ steps.vars.outputs.issueTitle }}"
           embed-description:
             "**Title**: ${{ github.event.pull_request.title }}\n
-            **Link**: [${{steps.vars.outputs.prLink}}](${{github.event.pull_request.html_url}})\n
+            **Link**: [${{steps.vars.outputs.issueLink}}](${{github.event.pull_request.html_url}})\n
             **Author**: <@${{ github.event.pull_request.user.login }}>\n
             ${{ steps.vars.outputs.descriptionLabel }} \n ${{ env.descBody }}"
 
@@ -79,10 +70,10 @@ jobs:
           message: |
             ### :envelope_with_arrow: ${{ steps.vars.outputs.botName }} Sent a messsage to discord for this PR :outbox_tray:
             **Title**: ${{ github.event.pull_request.title }}
-            **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.pull_request.html_url}})
-            **Author**: @${{ github.event.pull_request.user.login }}
+            **Link**: [${{steps.vars.outputs.prTitle}}](${{github.event.issue.url}})
+            **Author**: @${{ github.event.issue.user }}
             ${{ steps.vars.outputs.descriptionLabel }}
-            ${{ env.descBody }}
+            ${{ steps.vars.outputs.descriptionBody }}
             If you add a `wip` label before submitting it will skip this next time.
 
       - name: Add dotnet label to PR
@@ -91,3 +82,9 @@ jobs:
         with:
           github_token: ${{ github.token }}
           labels: discord-pr-sent
+
+          # hold for maybe image grep
+
+          # images=($(grep -Eo "https?://[^][ ]+\.(jpg|png|gif|jpeg)" <<< "$descBody"))
+          # for i in ${images[@]}; do
+          #   imageObj=

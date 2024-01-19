@@ -1,0 +1,15 @@
+name: Pull stats on prs
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  stats:
+    runs-on: [self-hosted]
+    steps:
+      - name: Run PR stats
+        uses: flowwer-dev/pull-request-stats@master
+        with:
+          charts: true
+          sort-by: "REVIEWS"
