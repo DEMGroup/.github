@@ -1,10 +1,11 @@
-## Integrating AWS with workflows
+# Integrating AWS with workflows
 
 1. Create an IAM role in AWS.
     - Ensure you pick **Web Identity** for **Trusted entity type**
     - There should be an already created github identity for you to choose.
 
 2. Create a policy with the following permissions (This is the bare minimum for Github Actions to use the role)
+
     ```json
     {
         "Version": "2012-10-17",
@@ -19,9 +20,11 @@
         ]
     }
     ```
+
 3. Create another AWS policy for what your role needs to do (s3, ec2, etc..)
 4. Once the role is created and all the policies are attached, you need to go the the roles "Trust Settings"
 5. Ensure the following trust policy is set on the role.
+
    ```json
     {
         "Version": "2012-10-17",
@@ -44,7 +47,6 @@
         ]
     }
     ```
-
 
 6. Use the following snippet in your yaml file
 

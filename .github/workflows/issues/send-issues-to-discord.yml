@@ -3,6 +3,7 @@ name: Send message about issues to discord
 on:
   issues:
     types: [opened, edited, closed, reopened, assigned, unassigned]
+  workflow_call:
 
 jobs:
   notify-discord-issue:

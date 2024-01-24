@@ -1,8 +1,10 @@
 name: Pull stats on prs
 
 on:
-  pull_request:
-    types: [opened]
+  pull_request_target:
+    types:
+      - opened
+  workflow_call:
 
 jobs:
   stats:

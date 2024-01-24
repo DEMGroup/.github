@@ -16,12 +16,12 @@ jobs:
   short-circuit:
     uses: DEMGroup/.github/.github/workflows/short-circuit.yml@main
     with:
-      short-circuit-label: 'deploy-file-exists'
+      short-circuit-label: "deploy-file-exists"
 
   check-project-type:
     needs: [short-circuit]
     if: needs.short-circuit.outputs.short-circuit != 'true'
-    uses: DEMGroup/.github/.github/workflows/check-project-type.yml@main
+    uses: DEMGroup/.github/.github/workflows/checks/check-project-type.yml@main
 
   check-deploy-file:
     needs: [check-project-type]

@@ -1,0 +1,23 @@
+name: build
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+  workflow_call:
+
+env:
+  NUGET_ENABLE_LEGACY_CSPROJ_PACK: true
+
+jobs:
+  get-semver:
+    runs-on: [self-hosted]
+    steps:
+      - name: Get SemVer label
+        id: semver
+        run: |
+          echo "SemVer label: ${{ steps.filter.labels }}"
+          semver_label=$(echo "${{ steps.filter.labels }}" | awk -F '/' '{print $2}')
+          echo "semver=$semver_label" >> $GITHUB_OUTPUT
+        env:
+          LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
