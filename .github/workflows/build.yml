@@ -8,14 +8,14 @@ jobs:
   check-project-type:
     # skip if it isn't a PR to (default = main) or direct call
     if: ${{ github.event_name == 'workflow_call' || (github.event_name == 'pull_request' && github.base_ref == github.event.repository.default_branch) }}
-    uses: DEMGroup/.github/.github/workflows/checks/check-project-type.yml@main
+    uses: DEMGroup/.github/.github/workflows/check-project-type.yml@main
 
   build-dotnet:
     needs: [check-project-type]
     if: ${{needs.check-project-type.outputs.isDotnet == 'true' && needs.check-project-type.outputs.isNode == 'false'}}
-    uses: DEMGroup/.github/.github/workflows/builds/build-dotnet.yml@main
+    uses: DEMGroup/.github/.github/workflows/build-dotnet.yml@main
 
   build-typescript:
     needs: [check-project-type]
     if: ${{ needs.check-project-type.outputs.isDotnet == 'false' && needs.check-project-type.outputs.isNode == 'true'}}
-    uses: DEMGroup/.github/.github/workflows/builds/build-typescript.yml@main
+    uses: DEMGroup/.github/.github/workflows/build-typescript.yml@main
