@@ -17,7 +17,7 @@ on:
 
 jobs:
   bump-version:
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.release-version.outputs.new_version }}
       new_version_with_v: ${{ steps.release-version.outputs.new_version_with_v }}
