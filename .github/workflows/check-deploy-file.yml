@@ -30,12 +30,13 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check if deploy.yml exists
         id: check-file
         run: |
-          if [ -f ".github/workflows/deploy.yml" ]; then
+          # check if deploy.yml or deploy.*.yml or deploy.yaml or deploy.*.yaml exists
+          if [ -f ".github/workflows/deploy.yml" ] || [ -f ".github/workflows/deploy.*.yml" ] || [ -f ".github/workflows/deploy.yaml" ] || [ -f ".github/workflows/deploy.*.yaml" ]; then
             exit 0
           else
             echo "::error  title=Deploy File is Missing::Could not find Deploy.yml"

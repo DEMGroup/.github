@@ -40,7 +40,7 @@ jobs:
           echo '## 🏴💀 You are missing `secrets.PR_WEBHOOK_URL` from your repository. Please add it [here](https://github.com/${{github.repository_owner}}/settings/secrets/actions). 💀🏴' >> $GITHUB_STEP_SUMMARY
           exit 1
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set vars
         id: vars
         run: |
