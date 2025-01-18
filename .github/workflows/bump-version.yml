@@ -11,14 +11,14 @@ on:
       new_version:
         description: "The new semver version (sans 'v' prefix) based on the inputs.semver"
         value: ${{ jobs.bump-version.outputs.new_version }}
-      new_major:
-        description: "The new semver version (sans 'v' prefix) based on the inputs.semver"
+      new_version_major:
+        description: "The new semver major version (sans 'v' prefix) based on the inputs.semver"
         value: ${{ jobs.bump-version.outputs.new_version_major }}
-      new_minor:
-        description: "The new semver version (sans 'v' prefix) based on the inputs.semver"
+      new_version_minor:
+        description: "The new semver minor version (sans 'v' prefix) based on the inputs.semver"
         value: ${{ jobs.bump-version.outputs.new_version_minor }}
-      new_patch:
-        description: "The new semver version (sans 'v' prefix) based on the inputs.semver"
+      new_version_patch:
+        description: "The new semver patch version (sans 'v' prefix) based on the inputs.semver"
         value: ${{ jobs.bump-version.outputs.new_version_patch }}
       new_version_with_v:
         description: "The new semver version (with 'v' prefix) based on the inputs.semver"
