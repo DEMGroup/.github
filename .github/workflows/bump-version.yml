@@ -11,6 +11,15 @@ on:
       new_version:
         description: "The new semver version (sans 'v' prefix) based on the inputs.semver"
         value: ${{ jobs.bump-version.outputs.new_version }}
+      new_major:
+        description: "The new semver version (sans 'v' prefix) based on the inputs.semver"
+        value: ${{ jobs.bump-version.outputs.new_version_major }}
+      new_minor:
+        description: "The new semver version (sans 'v' prefix) based on the inputs.semver"
+        value: ${{ jobs.bump-version.outputs.new_version_minor }}
+      new_patch:
+        description: "The new semver version (sans 'v' prefix) based on the inputs.semver"
+        value: ${{ jobs.bump-version.outputs.new_version_patch }}
       new_version_with_v:
         description: "The new semver version (with 'v' prefix) based on the inputs.semver"
         value: ${{ jobs.bump-version.outputs.new_version_with_v }}
@@ -21,6 +30,9 @@ jobs:
     outputs:
       new_version: ${{ steps.release-version.outputs.new_version }}
       new_version_with_v: ${{ steps.release-version.outputs.new_version_with_v }}
+      new_version_major: ${{ steps.release-version.outputs.new_version_major }}
+      new_version_minor: ${{ steps.release-version.outputs.new_version_minor }}
+      new_version_patch: ${{ steps.release-version.outputs.new_version_patch }}
 
     steps:
       - uses: actions/checkout@v4
@@ -74,9 +86,18 @@ jobs:
           npm i -g semver
           semver="$(semver --increment '${{steps.release-label.outputs.releaseLevel}}' '${{steps.get-latest-tag.outputs.tag }}')"
           echo "new_version=$semver" >> $GITHUB_OUTPUT
+          major=$(echo $semver | cut -d. -f1)
+          minor=$(echo $semver | cut -d. -f2)
+          patch=$(echo $semver | cut -d. -f3)
+          echo "new_version_major=$major" >> $GITHUB_OUTPUT
+          echo "new_version_minor=$minor" >> $GITHUB_OUTPUT
+          echo "new_version_patch=$patch" >> $GITHUB_OUTPUT
 
       - name: Set usable new version
         id: release-version
         run: |
           echo "new_version=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
+          echo "new_version_major=${{ steps.bump-semver.outputs.new_version_major }}" >> $GITHUB_OUTPUT
+          echo "new_version_minor=${{ steps.bump-semver.outputs.new_version_minor }}" >> $GITHUB_OUTPUT
+          echo "new_version_patch=${{ steps.bump-semver.outputs.new_version_patch }}" >> $GITHUB_OUTPUT
           echo "new_version_with_v=v${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
