@@ -55,11 +55,15 @@ jobs:
       - name: Validate inputs
         id: valid-input
         run: |
-          validSemver="['major', 'minor', 'patch']"
+          validSemver="['major', 'minor', 'patch', 'skip']"
           if ([ ${{ steps.release-label.outputs.releaseLevel == null }} == true ] || [ ${{ steps.release-label.outputs.releaseLevel == '' }} == true ] || [[ "; {validSemver[*]}" =~ "${{ steps.release-label.outputs.releaseLevel }}" ]]); then
             echo "::error title=Invalid Semver Level::The version supplied (Input: ${{ inputs.semver }}) and (Labels: ${{ toJson(github.event.pull_request.labels.*.name) }}) are not valid semver."
             exit 1
           fi
+
+      - name: Check if skipped
+        if: ${{ steps.release-label.outputs.releaseLevel }} == 'skip'
+        uses: andymckay/cancel-action@0.5
 
       - name: Add PR Comment
         if: ${{ failure() && github.event_name == 'pull_request' }}
