@@ -62,7 +62,7 @@ jobs:
           fi
 
       - name: Check if skipped
-        if: ${{ steps.release-label.outputs.releaseLevel }} == 'skip'
+        if: steps.release-label.outputs.releaseLevel == 'skip'
         uses: andymckay/cancel-action@0.5
 
       - name: Add PR Comment
