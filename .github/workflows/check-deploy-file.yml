@@ -35,7 +35,7 @@ jobs:
       - name: Check if deploy.yml exists
         id: check-file
         run: |
-          if [ -f ".github/workflows/deploy.yml" ] || [ -f ".github/workflows/deploy.server.yml" ] || [ -f ".github/workflows/deploy.yaml" ] || [ -f ".github/workflows/deploy.server.yaml" ]; then
+          if [ -f ".github/workflows/deploy.yml" ] || [ -f ".github/workflows/deploy.server.yml" ] || [ -f ".github/workflows/deploy.yaml" ] || [ -f ".github/workflows/deploy.server.yaml" ] || [ -f ".github/workflows/deploy-migrate.yaml" ]; then
             exit 0
           else
             echo "::error  title=Deploy File is Missing::Could not find Deploy.yml"
