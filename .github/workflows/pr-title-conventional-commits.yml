@@ -23,8 +23,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          disallowScopes: |
-            release
           wip: true
 
       - uses: marocchino/sticky-pull-request-comment@v3.0.4
